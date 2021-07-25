@@ -3,7 +3,9 @@ let app = express();
 var exphbs  = require('express-handlebars');
 const bodyParser = require('body-parser');
 const SettingsBill = require('./settings-bill');
-const settingsBill = SettingsBill()
+//const domlogic = require('./public/js/dom-logic');
+//var actual = domlogic();
+const settingsBill = SettingsBill();
 //app.get("/", function(req, res){
   //res.send("Bill Settings WebApp " + Date());
 //});
@@ -18,12 +20,20 @@ app.set('view engine', 'handlebars');
 app.get('/', function (req, res) {
     res.render('index', {
       settings: settingsBill.getSettings(),
-      totals: settingsBill.totals()
+      totals: settingsBill.totals(),
+      level: settingsBill.levels(),
+      change: settingsBill.change()
     });
+    /*
+    if(settingsBill.hasReachedWarningLevel()){
+        actual.warningLevel()
+    } else if(settingsBill.hasReachedCriticalLevel()){
+      actual.dangerLevel()
+    } */
 });
 
 app.get('/' , (req , res)=>{
-   res.send('hello from simple server')
+
 })
 app.post('/settings', (req, res)=>{
 settingsBill.setSettings({
@@ -39,12 +49,14 @@ app.post('/action', (req, res)=>{
   res.redirect('/')
 })
 app.get('/actions' , (req , res)=>{
+  console.log(req.body)
 res.render('actions', {actions: settingsBill.actions()})
 })
 app.get('/actions/:actionType' , (req , res)=>{
   const actionType = req.params.actionType
   res.render('actions', {actions: settingsBill.actionsFor(actionType)})
-})
+});
+
 let PORT = process.env.PORT || 3009;
 
 app.listen(PORT, function(){

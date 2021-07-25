@@ -1,5 +1,5 @@
-module.exports = function SettingsBill() {
 
+module.exports = function SettingsBill() {
     let smsCost;
     let callCost;
     let warningLevel;
@@ -24,15 +24,16 @@ module.exports = function SettingsBill() {
     }
 
     function recordAction(action) {
+        //get totals first
 
         let cost = 0;
+       
         if (action === 'sms'){
             cost = smsCost;
         }
         else if (action === 'call'){
             cost = callCost;
         }
-
         actionList.push({
             type: action,
             cost,
@@ -74,7 +75,6 @@ module.exports = function SettingsBill() {
             }
         }
         return total;
-
         // the short way using reduce and arrow functions
 
         // return actionList.reduce((total, action) => { 
@@ -84,16 +84,17 @@ module.exports = function SettingsBill() {
     }
 
     function grandTotal() {
+        
         return getTotal('sms') + getTotal('call');
     }
 
     function totals() {
-        let smsTotal = getTotal('sms')
-        let callTotal = getTotal('call')
-        return {
+        let smsTotal = getTotal('sms').toFixed(2);
+        let callTotal = getTotal('call').toFixed(2);
+         return {
             smsTotal,
             callTotal,
-            grandTotal : grandTotal()
+            grandTotal : grandTotal().toFixed(2)
         }
     }
 
@@ -101,7 +102,6 @@ module.exports = function SettingsBill() {
         const total = grandTotal();
         const reachedWarningLevel = total >= warningLevel 
             && total < criticalLevel;
-
         return reachedWarningLevel;
     }
 
@@ -109,7 +109,24 @@ module.exports = function SettingsBill() {
         const total = grandTotal();
         return total >= criticalLevel;
     }
-
+        function levels(){
+            if(hasReachedCriticalLevel()){
+                return 'danger'
+            } else if(hasReachedWarningLevel()){
+                return "warning"
+            } else{
+                return ""
+            }
+        }
+        function change(){
+            if(hasReachedCriticalLevel()){
+                return 'button'
+            } else if(hasReachedWarningLevel()){
+                return "submit"
+            } else{
+                return "submit"
+            }
+        }
     return {
         setSettings,
         getSettings,
@@ -118,6 +135,8 @@ module.exports = function SettingsBill() {
         actionsFor,
         totals,
         hasReachedWarningLevel,
-        hasReachedCriticalLevel
+        hasReachedCriticalLevel,
+        levels,
+        change
     }
 }
