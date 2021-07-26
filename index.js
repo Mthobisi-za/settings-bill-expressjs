@@ -3,6 +3,8 @@ let app = express();
 var exphbs  = require('express-handlebars');
 const bodyParser = require('body-parser');
 const SettingsBill = require('./settings-bill');
+const moment = require("moment");
+
 //const domlogic = require('./public/js/dom-logic');
 //var actual = domlogic();
 const settingsBill = SettingsBill();
@@ -18,12 +20,14 @@ app.use(bodyParser.json())
 app.engine('handlebars', exphbs({defaultLayout: "main", layoutsDir: 'views/layout'}));
 app.set('view engine', 'handlebars');
 app.get('/', function (req, res) {
+ 
     res.render('index', {
       settings: settingsBill.getSettings(),
       totals: settingsBill.totals(),
       level: settingsBill.levels(),
       change: settingsBill.change()
     });
+    
     /*
     if(settingsBill.hasReachedWarningLevel()){
         actual.warningLevel()
@@ -49,7 +53,6 @@ app.post('/action', (req, res)=>{
   res.redirect('/')
 })
 app.get('/actions' , (req , res)=>{
-  console.log(req.body)
 res.render('actions', {actions: settingsBill.actions()})
 })
 app.get('/actions/:actionType' , (req , res)=>{
@@ -60,5 +63,5 @@ app.get('/actions/:actionType' , (req , res)=>{
 let PORT = process.env.PORT || 3009;
 
 app.listen(PORT, function(){
-  console.log('App starting on port', PORT);
+  console.log("server started on port "+ PORT)
 });
