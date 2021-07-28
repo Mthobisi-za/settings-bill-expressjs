@@ -38,7 +38,7 @@ module.exports = function SettingsBill() {
         actionList.push({
             type: action,
             cost,
-            timestamp: moment(new Date()).fromNow()
+            timestamp: new Date() /* moment(new Date()).fromNow()*/
         });
     }
 
