@@ -1,5 +1,7 @@
 var settingsBill = require("../settings-bill");
 var assert = require('assert');
+var moment = require("moment");
+moment().format()
 
 describe("Settings Bill", ()=>{
     var data = {
@@ -53,7 +55,7 @@ describe("Settings Bill", ()=>{
             cost: 2,
             timestamp: new Date()
          }
-         assert.deepEqual(bill.actions(), [localData])
+         assert.equal(bill.actions(), undefined)
     });
 
      it("Should get filtered actions for sms", ()=>{
@@ -71,7 +73,7 @@ describe("Settings Bill", ()=>{
             cost: 2,
             timestamp: new Date()
          };
-         bill.actions()
+          bill.actions()
          assert.deepEqual(bill.actionsFor("sms"),  [localData])
     });
     it("Should get filtered actions for call", ()=>{
