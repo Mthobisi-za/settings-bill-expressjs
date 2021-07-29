@@ -9,6 +9,7 @@ module.exports = function SettingsBill() {
     let actionList = [];
 
     function setSettings (settings) {
+        
         smsCost = Number(settings.smsCost);
         callCost = Number(settings.callCost);
         warningLevel = settings.warningLevel;
@@ -16,11 +17,24 @@ module.exports = function SettingsBill() {
     }
 
     function getSettings() {
-        return {
-            smsCost,
-            callCost,
-            warningLevel,
-            criticalLevel
+        if(smsCost == undefined || callCost === undefined){
+            smsCost = 0;
+            callCost= 0;
+            warningLevel = 0;
+            criticalLevel = 0;
+            return {
+                smsCost,
+                callCost,
+                warningLevel,
+                criticalLevel
+            }
+        } else{
+                return {
+                smsCost,
+                callCost,
+                warningLevel,
+                criticalLevel
+            }
         }
     }
 
@@ -38,12 +52,23 @@ module.exports = function SettingsBill() {
         actionList.push({
             type: action,
             cost,
-            timestamp: moment(new Date()).fromNow()
+            timestamp: new Date()
         });
     }
 
     function actions(){
-        return actionList;
+        try {
+            if(actionList == [] || actionList[1].cost == 0){
+                return ""
+            } else if(actionList[1].cost !== 0){
+                return actionList
+            }else{
+
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        //try
     }
 
     function actionsFor(type){

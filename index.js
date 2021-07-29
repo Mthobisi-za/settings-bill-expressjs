@@ -4,7 +4,7 @@ var exphbs  = require('express-handlebars');
 const bodyParser = require('body-parser');
 const SettingsBill = require('./settings-bill');
 const moment = require("moment");
-
+moment().format()
 //const domlogic = require('./public/js/dom-logic');
 //var actual = domlogic();
 const settingsBill = SettingsBill();
@@ -16,8 +16,16 @@ app.use(express.static("public"))
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
-
-app.engine('handlebars', exphbs({defaultLayout: "main", layoutsDir: 'views/layout'}));
+app.engine('handlebars', exphbs(
+  {defaultLayout: "main", layoutsDir: 'views/layout',
+  helpers:
+  {
+      "updatedDate":function()
+      {
+           return moment(this.timeStamp).fromNow()
+      }
+  }
+}));
 app.set('view engine', 'handlebars');
 app.get('/', function (req, res) {
  
@@ -53,10 +61,14 @@ app.post('/action', (req, res)=>{
   res.redirect('/')
 })
 app.get('/actions' , (req , res)=>{
-res.render('actions', {actions: settingsBill.actions()})
+var data = settingsBill.actions();
+for(var prop of data){
+  prop.ago = moment(data.timestamp).fromNow()
+}
+res.render('actions', {actions: data})
 })
 app.get('/actions/:actionType' , (req , res)=>{
-  const actionType = req.params.actionType
+  const actionType = req.params.actionType;
   res.render('actions', {actions: settingsBill.actionsFor(actionType)})
 });
 
