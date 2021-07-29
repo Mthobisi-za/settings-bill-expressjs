@@ -16,16 +16,7 @@ app.use(express.static("public"))
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
-app.engine('handlebars', exphbs(
-  {defaultLayout: "main", layoutsDir: 'views/layout',
-  helpers:
-  {
-      "updatedDate":function()
-      {
-           return moment(this.timeStamp).fromNow()
-      }
-  }
-}));
+app.engine('handlebars', exphbs({defaultLayout: "main", layoutsDir: 'views/layout'}));
 app.set('view engine', 'handlebars');
 app.get('/', function (req, res) {
  
@@ -61,15 +52,21 @@ app.post('/action', (req, res)=>{
   res.redirect('/')
 })
 app.get('/actions' , (req , res)=>{
-var data = settingsBill.actions();
-for(var prop of data){
-  prop.ago = moment(data.timestamp).fromNow()
+
+const actions = settingsBill.actions()
+for(let prop of actions){
+  prop.ago = moment(prop.timestamp).fromNow()
 }
-res.render('actions', {actions: data})
-})
+res.render('actions', {actions: actions})
+});
+
 app.get('/actions/:actionType' , (req , res)=>{
   const actionType = req.params.actionType;
-  res.render('actions', {actions: settingsBill.actionsFor(actionType)})
+  const actions = settingsBill.actionsFor(actionType)
+  for(let prop of actions){
+    prop.ago = moment(prop.timestamp).fromNow()
+  }
+  res.render('actions', {actions: actions})
 });
 
 let PORT = process.env.PORT || 3009;
