@@ -18,16 +18,7 @@ module.exports = function SettingsBill() {
 
     function getSettings() {
         if(smsCost == undefined || callCost === undefined){
-            smsCost = 0;
-            callCost= 0;
-            warningLevel = 0;
-            criticalLevel = 0;
-            return {
-                smsCost,
-                callCost,
-                warningLevel,
-                criticalLevel
-            }
+            
         } else{
                 return {
                 smsCost,
@@ -136,6 +127,7 @@ module.exports = function SettingsBill() {
         return total >= criticalLevel;
     }
         function levels(){
+            
             if(hasReachedCriticalLevel()){
                 return 'danger'
             } else if(hasReachedWarningLevel()){
